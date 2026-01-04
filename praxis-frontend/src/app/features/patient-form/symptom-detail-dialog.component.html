@@ -1,0 +1,51 @@
+<div class="dialog">
+  <div class="dialog-head">
+    <div class="title">
+      <mat-icon class="title-ic">{{ config.icon }}</mat-icon>
+      <div>
+        <div class="title-text">{{ config.label }}</div>
+        <div class="subtitle">Details zum Symptom erfassen</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dialog-body">
+    <div class="row" *ngIf="config.options?.length">
+      <div class="label">Auswahl</div>
+      <mat-chip-listbox class="option-chips" [formControl]="form.controls.option" [multiple]="false">
+        <mat-chip-option *ngFor="let opt of config.options" [value]="opt">
+          {{ opt }}
+        </mat-chip-option>
+      </mat-chip-listbox>
+    </div>
+
+    <div class="row">
+      <div class="label">Staerke (0-10)</div>
+      <div class="severity-row">
+        <mat-slider min="0" max="10" step="1">
+          <input matSliderThumb [formControl]="form.controls.severity" />
+        </mat-slider>
+        <div class="severity-value">{{ form.controls.severity.value }}</div>
+      </div>
+    </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Seit wann?</mat-label>
+      <mat-select [formControl]="form.controls.onset">
+        <mat-option *ngFor="let opt of durationOptions" [value]="opt">
+          {{ opt }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Weitere Hinweise</mat-label>
+      <textarea matInput rows="3" [formControl]="form.controls.notes"></textarea>
+    </mat-form-field>
+  </div>
+
+  <div class="dialog-actions">
+    <button mat-stroked-button type="button" (click)="cancel()">Abbrechen</button>
+    <button mat-flat-button color="primary" type="button" (click)="save()">Speichern</button>
+  </div>
+</div>

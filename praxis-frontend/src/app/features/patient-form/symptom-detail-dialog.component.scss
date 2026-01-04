@@ -1,0 +1,85 @@
+.dialog {
+  display: grid;
+  gap: 16px;
+  padding: 4px 2px;
+  margin: 20px;
+}
+
+.dialog-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.title-ic {
+  background: rgba(63, 81, 181, 0.12);
+  color: #3f51b5;
+  border-radius: 12px;
+  padding: 8px;
+}
+
+.title-text {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.subtitle {
+  font-size: 12px;
+  color: rgba(0,0,0,.6);
+}
+
+.dialog-body {
+  display: grid;
+  gap: 14px;
+}
+
+.row {
+  display: grid;
+  gap: 8px;
+}
+
+.label {
+  font-size: 12px;
+  color: rgba(0,0,0,.6);
+}
+
+.option-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  ::ng-deep .mdc-evolution-chip {
+    border-radius: 999px;
+  }
+}
+
+.severity-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.severity-value {
+  font-weight: 700;
+  color: #3f51b5;
+  min-width: 28px;
+  text-align: right;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+@media (max-width: 600px) {
+  .severity-row { grid-template-columns: 1fr; }
+  .dialog-actions { flex-direction: column; }
+}

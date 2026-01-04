@@ -17,6 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 import { PublicSubmissionsService } from '../../core/api/public-submissions.service';
 import { SubmissionCreateRequest } from '../../core/api/submission-create.model';
@@ -64,6 +65,7 @@ export class PatientFormComponent {
   private api = inject(PublicSubmissionsService);
   private snack = inject(MatSnackBar);
   private dialog = inject(MatDialog);
+  private router = inject(Router);
 
   // Patterns (tablet-freundlich)
   private readonly zipDE = /^\d{5}$/;
@@ -171,8 +173,8 @@ export class PatientFormComponent {
     this.api.createSubmission(payload).subscribe({
       next: () => {
         this.submitting.set(false);
-        this.snack.open('Danke! Formular wurde gesendet.', 'OK', { duration: 3000 });
         this.resetForm();
+        this.router.navigate(['/form/success']);
       },
       error: () => {
         this.submitting.set(false);
