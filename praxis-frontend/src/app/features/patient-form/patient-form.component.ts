@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, ViewChild, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -62,7 +62,7 @@ import { SymptomDetail } from '../../core/api/submission-create.model';
   styleUrls: ['./patient-form.component.scss'],
 })
 
-export class PatientFormComponent {
+export class PatientFormComponent implements AfterViewInit {
   private fb = inject(FormBuilder);
   private api = inject(PublicSubmissionsService);
   private snack = inject(MatSnackBar);
@@ -80,6 +80,13 @@ export class PatientFormComponent {
   dragActive = signal(false);
   uploadState = signal<'idle' | 'uploading' | 'success' | 'error'>('idle');
   uploadProgress = signal(0);
+  signatureHasInk = signal(false);
+  signatureReady = signal(false);
+
+  @ViewChild('signatureCanvas') signatureCanvas?: ElementRef<HTMLCanvasElement>;
+  private signatureCtx: CanvasRenderingContext2D | null = null;
+  private signatureDrawing = false;
+  private signatureLastPoint: { x: number; y: number } | null = null;
 
   attachments: File[] = [];
   private readonly maxFiles = 5;
@@ -133,12 +140,17 @@ export class PatientFormComponent {
       gdprAccepted: this.fb.nonNullable.control(false, [Validators.requiredTrue]),
       dataSharingAccepted: this.fb.nonNullable.control(false),
     }),
+    signature: this.fb.nonNullable.group({
+      contentType: this.fb.nonNullable.control('image/png'),
+      base64: this.fb.nonNullable.control('', [Validators.required]),
+    }),
   });
 
   // helpers fürs Template (verhindert TS4111 / index-signature)
   pd = computed(() => this.form.controls.patientData.controls);
   addr = computed(() => this.form.controls.patientData.controls.address.controls);
   cons = computed(() => this.form.controls.consents.controls);
+  sig = computed(() => this.form.controls.signature.controls);
   med = computed(() => this.form.controls.medical.controls);
   symptomValues$ = (this.form.controls.medical.controls.symptoms as FormArray).valueChanges.pipe(
     startWith((this.form.controls.medical.controls.symptoms as FormArray).getRawValue() as SymptomDetail[])
@@ -174,6 +186,10 @@ export class PatientFormComponent {
         gdprAccepted: v.consents.gdprAccepted,
         dataSharingAccepted: v.consents.dataSharingAccepted,
         acceptedAt: v.consents.gdprAccepted ? new Date().toISOString() : null,
+      },
+      signature: {
+        contentType: v.signature.contentType,
+        base64: v.signature.base64,
       },
     };
 
@@ -228,6 +244,7 @@ export class PatientFormComponent {
         preExistingConditions: [],
       },
       consents: { gdprAccepted: false, dataSharingAccepted: false },
+      signature: { contentType: 'image/png', base64: '' },
     });
     (this.form.controls.medical.controls.symptoms as FormArray).clear();
     this.extraAllergy.setValue('');
@@ -238,6 +255,7 @@ export class PatientFormComponent {
     this.dragActive.set(false);
     this.uploadState.set('idle');
     this.uploadProgress.set(0);
+    this.clearSignature(true);
     this.form.markAsPristine();
     this.form.markAsUntouched();
   }
@@ -378,6 +396,123 @@ export class PatientFormComponent {
           this.cityLocked.set(false);
         },
       });
+  }
+
+  ngAfterViewInit() {
+    this.setupSignatureCanvas();
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.resizeSignatureCanvas();
+  }
+
+  @HostListener('window:pointerup')
+  onPointerUp() {
+    this.endSignature();
+  }
+
+  private setupSignatureCanvas() {
+    const canvas = this.signatureCanvas?.nativeElement;
+    if (!canvas) return;
+    this.signatureCtx = canvas.getContext('2d');
+    if (!this.signatureCtx) return;
+
+    this.signatureCtx.lineWidth = 2.2;
+    this.signatureCtx.lineCap = 'round';
+    this.signatureCtx.lineJoin = 'round';
+    this.signatureCtx.strokeStyle = '#1f2937';
+    this.resizeSignatureCanvas();
+  }
+
+  private resizeSignatureCanvas() {
+    const canvas = this.signatureCanvas?.nativeElement;
+    const ctx = this.signatureCtx;
+    if (!canvas || !ctx) return;
+
+    const dataUrl = this.signatureReady() ? canvas.toDataURL('image/png') : null;
+    const { width, height } = canvas.getBoundingClientRect();
+    const ratio = Math.max(window.devicePixelRatio || 1, 1);
+
+    canvas.width = Math.floor(width * ratio);
+    canvas.height = Math.floor(height * ratio);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(ratio, ratio);
+    ctx.clearRect(0, 0, width, height);
+
+    if (dataUrl) {
+      const img = new Image();
+      img.onload = () => {
+        ctx.drawImage(img, 0, 0, width, height);
+      };
+      img.src = dataUrl;
+    }
+  }
+
+  startSignature(event: PointerEvent) {
+    if (!this.signatureCtx) return;
+    event.preventDefault();
+    const point = this.signaturePoint(event);
+    if (!point) return;
+    this.signatureDrawing = true;
+    this.signatureLastPoint = point;
+  }
+
+  drawSignature(event: PointerEvent) {
+    if (!this.signatureCtx || !this.signatureDrawing || !this.signatureLastPoint) return;
+    event.preventDefault();
+    const point = this.signaturePoint(event);
+    if (!point) return;
+    this.signatureCtx.beginPath();
+    this.signatureCtx.moveTo(this.signatureLastPoint.x, this.signatureLastPoint.y);
+    this.signatureCtx.lineTo(point.x, point.y);
+    this.signatureCtx.stroke();
+    this.signatureLastPoint = point;
+    this.signatureHasInk.set(true);
+  }
+
+  endSignature() {
+    if (!this.signatureDrawing) return;
+    this.signatureDrawing = false;
+    this.signatureLastPoint = null;
+    this.captureSignature();
+  }
+
+  clearSignature(silent = false) {
+    const canvas = this.signatureCanvas?.nativeElement;
+    const ctx = this.signatureCtx;
+    if (canvas && ctx) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    this.signatureHasInk.set(false);
+    this.signatureReady.set(false);
+    this.sig().base64.setValue('');
+    if (!silent) {
+      this.sig().base64.markAsTouched();
+    }
+  }
+
+  private captureSignature() {
+    const canvas = this.signatureCanvas?.nativeElement;
+    if (!canvas || !this.signatureHasInk()) {
+      this.signatureReady.set(false);
+      this.sig().base64.setValue('');
+      return;
+    }
+    const dataUrl = canvas.toDataURL('image/png');
+    const base64 = dataUrl.split(',')[1] ?? '';
+    this.sig().base64.setValue(base64);
+    this.signatureReady.set(!!base64);
+  }
+
+  private signaturePoint(event: PointerEvent) {
+    const canvas = this.signatureCanvas?.nativeElement;
+    if (!canvas) return null;
+    const rect = canvas.getBoundingClientRect();
+    return {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top,
+    };
   }
 
   onFilesSelected(event: Event) {

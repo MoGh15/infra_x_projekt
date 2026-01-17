@@ -32,7 +32,7 @@ export interface SubmissionDetails extends SubmissionListItem {
     dataSharingAccepted: boolean;
     acceptedAt?: string | null; // ISO
   };
-  signature?: string | null;
+  signature?: Signature | null;
   meta?: {
     tabletId?: string;
     language?: string;
@@ -57,4 +57,20 @@ export interface SubmissionAttachment {
   contentType?: string;
   size?: number;
   uploadedAt?: string;
+}
+
+export interface Signature {
+  contentType?: string;
+  base64?: string;
+  strokes?: SignatureStroke[];
+}
+
+export interface SignatureStroke {
+  points: SignaturePoint[];
+}
+
+export interface SignaturePoint {
+  x: number;
+  y: number;
+  t?: number;
 }

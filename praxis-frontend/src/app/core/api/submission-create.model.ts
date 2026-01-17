@@ -5,7 +5,7 @@ export interface SubmissionCreateRequest {
   patientData: PatientData;
   medical: MedicalData;
   consents: Consents;
-  // signature?: Signature; // später
+  signature: Signature;
   // meta?: SubmissionMeta; // optional, später
 }
 
@@ -49,4 +49,20 @@ export interface Consents {
 export interface ZipSuggestion {
   zip: string;
   city: string;
+}
+
+export interface Signature {
+  contentType: string;
+  base64: string;
+  strokes?: SignatureStroke[];
+}
+
+export interface SignatureStroke {
+  points: SignaturePoint[];
+}
+
+export interface SignaturePoint {
+  x: number;
+  y: number;
+  t?: number;
 }

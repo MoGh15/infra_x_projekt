@@ -388,6 +388,44 @@
         </mat-card-content>
       </mat-card>
 
+      <!-- Unterschrift -->
+      <mat-card class="section signature-section">
+        <mat-card-title>Unterschrift</mat-card-title>
+
+        <mat-card-content [formGroup]="form.controls.signature" class="signature-block">
+          <div class="signature-pad" [class.invalid]="sig().base64.touched && sig().base64.invalid">
+            <div class="signature-hint" *ngIf="!signatureHasInk()">Mit Finger oder Stift unterschreiben</div>
+            <canvas
+              #signatureCanvas
+              class="signature-canvas"
+              (pointerdown)="startSignature($event)"
+              (pointermove)="drawSignature($event)"
+              (pointerup)="endSignature()"
+              (pointerleave)="endSignature()"
+              (pointercancel)="endSignature()"
+            ></canvas>
+          </div>
+
+          <div class="signature-actions">
+            <button mat-stroked-button type="button" (click)="clearSignature()">
+              <mat-icon>delete</mat-icon>
+              Loeschen
+            </button>
+
+            <div class="signature-meta">
+              <div class="signature-state" [class.ok]="signatureReady()">
+                {{ signatureReady() ? 'Unterschrift erfasst' : 'Unterschrift erforderlich' }}
+              </div>
+              <div class="signature-note">Bitte unterschreiben, bevor Sie das Formular absenden.</div>
+            </div>
+          </div>
+
+          <div class="signature-error" *ngIf="sig().base64.touched && sig().base64.invalid">
+            Unterschrift ist erforderlich.
+          </div>
+        </mat-card-content>
+      </mat-card>
+
       <!-- Actions -->
       <div class="actions">
         <button mat-flat-button color="primary" type="submit" [disabled]="submitting()">

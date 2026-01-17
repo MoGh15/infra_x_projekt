@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 import { AdminSubmissionsService } from '../../core/api/admin-submissions.service';
-import { SubmissionAttachment, SubmissionDetails, SubmissionStatus, SymptomDetail } from '../../core/api/submission.model';
+import { Signature, SubmissionAttachment, SubmissionDetails, SubmissionStatus, SymptomDetail } from '../../core/api/submission.model';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -191,6 +191,13 @@ export class SubmissionDetailsComponent {
 
   unique(list: string[]): string[] {
     return Array.from(new Set((list ?? []).map(x => (x ?? '').trim()).filter(Boolean)));
+  }
+
+  signatureDataUrl(signature?: Signature | null): string | null {
+    if (!signature?.base64) return null;
+    if (signature.base64.startsWith('data:')) return signature.base64;
+    const contentType = signature.contentType || 'image/png';
+    return `data:${contentType};base64,${signature.base64}`;
   }
 
   normalizeSymptoms(raw: any): SymptomDetail[] {

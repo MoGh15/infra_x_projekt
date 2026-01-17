@@ -5,6 +5,7 @@ import mohammad.development.praxis.modules.admin.SseHub;
 import mohammad.development.praxis.modules.patient.Submission;
 import mohammad.development.praxis.modules.patient.SubmissionStatus;
 import mohammad.development.praxis.modules.patient.SubmissionAttachment;
+import mohammad.development.praxis.modules.patient.Signature;
 import mohammad.development.praxis.repos.SubmissionRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -51,6 +52,7 @@ public class PublicSubmissionController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public Submission submit(@RequestBody SubmissionCreateRequest req) {
+        validateSignature(req.getSignature());
         Submission sAfterSave = submissionRepository.save(buildSubmission(req));
         hub.sendCreated(sAfterSave);
         return sAfterSave;
@@ -63,6 +65,7 @@ public class PublicSubmissionController {
             @RequestPart("payload") SubmissionCreateRequest req,
             @RequestPart(value = "files", required = false) List<MultipartFile> files
     ) {
+        validateSignature(req.getSignature());
         validateFiles(files);
 
         Submission sAfterSave = submissionRepository.save(buildSubmission(req));
@@ -133,6 +136,18 @@ public class PublicSubmissionController {
             if (contentType == null || !ALLOWED_TYPES.contains(contentType)) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unsupported file type");
             }
+        }
+    }
+
+    private void validateSignature(Signature signature) {
+        if (signature == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Signature required");
+        }
+        if (signature.getContentType() == null || signature.getContentType().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Signature contentType required");
+        }
+        if (signature.getBase64() == null || signature.getBase64().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Signature data required");
         }
     }
 

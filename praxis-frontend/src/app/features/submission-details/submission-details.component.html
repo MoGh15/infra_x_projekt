@@ -138,6 +138,20 @@
 
         <mat-card class="card section">
           <div class="section-head">
+            <h2>Unterschrift</h2>
+          </div>
+          <mat-divider></mat-divider>
+
+          <div class="signature-view" *ngIf="signatureDataUrl(s.signature) as sigUrl; else noSig">
+            <img [src]="sigUrl" alt="Unterschrift" />
+          </div>
+          <ng-template #noSig>
+            <div class="muted pad">-</div>
+          </ng-template>
+        </mat-card>
+
+        <mat-card class="card section">
+          <div class="section-head">
             <h2>Dokumente</h2>
             <span class="muted" *ngIf="s.attachments?.length">{{ s.attachments?.length || 0 }} Dateien</span>
           </div>
