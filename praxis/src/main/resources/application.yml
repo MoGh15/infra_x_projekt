@@ -3,6 +3,8 @@ app:
     jwt:
       secret: ${JWT_SECRET:CHANGE_ME_very_long_secret_at_least_32_chars}
       expiration-minutes: ${JWT_EXP_MINUTES:120}
+  admin:
+    default-password: ${ADMIN_DEFAULT_PASSWORD:changeme}
 
 spring:
   mongodb:

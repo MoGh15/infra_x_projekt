@@ -27,6 +27,7 @@ services:
       MONGODB_URI: mongodb://mongodb:27017/praxis
       JWT_SECRET: CHANGE_ME_very_long_secret_at_least_32_chars
       JWT_EXP_MINUTES: "120"
+      ADMIN_DEFAULT_PASSWORD: yIG8wsTGE9wLcAdipSFO
     depends_on:
       mongodb:
         condition: service_healthy
