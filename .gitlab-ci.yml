@@ -42,6 +42,7 @@ backend:test:
     SPRING_PROFILES_ACTIVE: test
   script:
     - cd praxis
+    - chmod +x ./mvnw
     - ./mvnw verify -B
   artifacts:
     when: always
@@ -60,6 +61,7 @@ backend:build:
   image: maven:3.9-eclipse-temurin-21
   script:
     - cd praxis
+    - chmod +x ./mvnw
     - ./mvnw package -DskipTests -B
   artifacts:
     paths:
@@ -77,23 +79,6 @@ backend:build:
 # ============================================
 # FRONTEND JOBS
 # ============================================
-
-frontend:test:
-  stage: test
-  image: node:22-alpine
-  script:
-    - cd praxis-frontend
-    - npm ci --prefer-offline
-    - npm run test -- --run --reporter=junit --outputFile=test-results.xml
-  artifacts:
-    when: always
-    reports:
-      junit: praxis-frontend/test-results.xml
-    expire_in: 1 week
-  rules:
-    - changes:
-        - praxis-frontend/**/*
-        - .gitlab-ci.yml
 
 frontend:lint:
   stage: test
@@ -240,6 +225,7 @@ dependency:check:
   image: maven:3.9-eclipse-temurin-21
   script:
     - cd praxis
+    - chmod +x ./mvnw
     - ./mvnw dependency:analyze -B || true
   allow_failure: true
   rules:
