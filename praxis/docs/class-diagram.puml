@@ -1,0 +1,298 @@
+@startuml
+
+class Address {
+	{field} +city : String
+	{field} +houseNumber : String
+	{field} +street : String
+	{field} +zip : String
+	{method} #canEqual ( paramObject1 : Object ) : boolean
+	{method} +equals ( paramObject1 : Object ) : boolean
+	{method} +hashCode () : int
+	{method} +toString () : String
+}
+
+
+class Admin {
+	{field} +createdAt : Instant
+	{field} +enabled : boolean
+	{field} +id : String
+	{field} +passwordHash : String
+	{field} +roles : Set
+	{field} +updatedAt : Instant
+	{field} +username : String
+	{method}  {static} +builder () : AdminBuilder
+	{method} #canEqual ( paramObject1 : Object ) : boolean
+	{method} +equals ( paramObject1 : Object ) : boolean
+	{method} +hashCode () : int
+	{method} +toString () : String
+}
+
+
+class AdminBuilder {
+	{field} -createdAt : Instant
+	{field} -enabled : boolean
+	{field} -id : String
+	{field} -passwordHash : String
+	{field} -roles : Set
+	{field} -updatedAt : Instant
+	{field} -username : String
+	{method} +build () : Admin
+	{method} +createdAt ( paramInstant1 : Instant ) : AdminBuilder
+	{method} +enabled ( paramboolean1 : boolean ) : AdminBuilder
+	{method} +id ( paramString1 : String ) : AdminBuilder
+	{method} +passwordHash ( paramString1 : String ) : AdminBuilder
+	{method} +roles ( paramSet1 : Set ) : AdminBuilder
+	{method} +toString () : String
+	{method} +updatedAt ( paramInstant1 : Instant ) : AdminBuilder
+	{method} +username ( paramString1 : String ) : AdminBuilder
+}
+
+
+class AdminSeeder {
+	{field} -adminDefaultPassword : String
+	{field} -adminRepository : AdminRepository
+	{field} -passwordEncoder : PasswordEncoder
+	{method} +run ( paramString;1 : String[] ) : void
+}
+
+
+class AdminSubmissionUpdateRequest {
+	{method} #canEqual ( paramObject1 : Object ) : boolean
+	{method} +equals ( paramObject1 : Object ) : boolean
+	{method} +hashCode () : int
+	{method} +toString () : String
+}
+
+
+class AdminUserDetailsService {
+	{field} -adminRepository : AdminRepository
+	{method} +loadUserByUsername ( paramString1 : String ) : UserDetails
+}
+
+
+class Consents {
+	{field} +acceptedAt : Instant
+	{field} +dataSharingAccepted : boolean
+	{field} +gdprAccepted : boolean
+	{method} #canEqual ( paramObject1 : Object ) : boolean
+	{method} +equals ( paramObject1 : Object ) : boolean
+	{method} +hashCode () : int
+	{method} +toString () : String
+}
+
+
+class JwtAuthenticationFilter {
+	{method} #doFilterInternal ( paramHttpServletRequest1 : HttpServletRequest , paramHttpServletResponse2 : HttpServletResponse , paramFilterChain3 : FilterChain ) : void
+}
+
+
+class JwtService {
+	{field} -expirationMinutes : long
+	{field} -key : Key
+	{method} +extractUsername ( paramString1 : String ) : String
+	{method} +generateToken ( paramString1 : String ) : String
+	{method} +isValid ( paramString1 : String ) : boolean
+	{method} -parser () : JwtParser
+}
+
+
+class LoginRequest {
+	{field} +password : String
+	{field} +username : String
+}
+
+
+class LoginResponse {
+	{field} -accessToken : String
+}
+
+
+class MedicalData {
+	{field} +allergies : List
+	{field} +medications : List
+	{field} +preExistingConditions : List
+	{method} #canEqual ( paramObject1 : Object ) : boolean
+	{method} +equals ( paramObject1 : Object ) : boolean
+	{method} +hashCode () : int
+	{method} +toString () : String
+}
+
+
+class PatientData {
+	{field} +birthDate : String
+	{field} +email : String
+	{field} +firstName : String
+	{field} +lastName : String
+	{field} +phone : String
+	{method} #canEqual ( paramObject1 : Object ) : boolean
+	{method} +equals ( paramObject1 : Object ) : boolean
+	{method} +hashCode () : int
+	{method} +toString () : String
+}
+
+
+class SecurityBeans {
+	{method} +authenticationManager ( paramAuthenticationConfiguration1 : AuthenticationConfiguration ) : AuthenticationManager
+	{method} +passwordEncoder () : PasswordEncoder
+}
+
+
+class SecurityConfig {
+	{method} ~corsConfigurationSource () : CorsConfigurationSource
+	{method} ~filterChain ( paramHttpSecurity1 : HttpSecurity , paramJwtAuthenticationFilter2 : JwtAuthenticationFilter ) : SecurityFilterChain
+	{method} ~jwtAuthenticationFilter () : JwtAuthenticationFilter
+}
+
+
+class Signature {
+	{field} +base64 : String
+	{field} +contentType : String
+	{method} #canEqual ( paramObject1 : Object ) : boolean
+	{method} +equals ( paramObject1 : Object ) : boolean
+	{method} +hashCode () : int
+	{method} +toString () : String
+}
+
+
+class SignaturePoint {
+	{field} +t : long
+	{field} +x : double
+	{field} +y : double
+	{method} #canEqual ( paramObject1 : Object ) : boolean
+	{method} +equals ( paramObject1 : Object ) : boolean
+	{method} +hashCode () : int
+	{method} +toString () : String
+}
+
+
+class SignatureStroke {
+	{field} +width : Double
+	{method} #canEqual ( paramObject1 : Object ) : boolean
+	{method} +equals ( paramObject1 : Object ) : boolean
+	{method} +hashCode () : int
+	{method} +toString () : String
+}
+
+
+class SseHub {
+	{field} -emitters : Set
+	{method} +register () : SseEmitter
+	{method} -send ( paramString1 : String , paramObject2 : Object ) : void
+	{method} +sendCreated ( paramObject1 : Object ) : void
+	{method} +sendUpdated ( paramObject1 : Object ) : void
+}
+
+
+class SseQueryTokenAuthFilter {
+	{field} -userDetailsService : UserDetailsService
+	{method} #doFilterInternal ( paramHttpServletRequest1 : HttpServletRequest , paramHttpServletResponse2 : HttpServletResponse , paramFilterChain3 : FilterChain ) : void
+	{method} #shouldNotFilter ( paramHttpServletRequest1 : HttpServletRequest ) : boolean
+}
+
+
+class Submission {
+	{field} +createdAt : Instant
+	{field} +formVersion : String
+	{field} +id : String
+	{field} +updatedAt : Instant
+	{method} #canEqual ( paramObject1 : Object ) : boolean
+	{method} +equals ( paramObject1 : Object ) : boolean
+	{method} +hashCode () : int
+	{method} +toString () : String
+}
+
+
+class SubmissionAttachment {
+	{field} +contentType : String
+	{field} +fileName : String
+	{field} +id : String
+	{field} +size : long
+	{field} +uploadedAt : Instant
+	{method} #canEqual ( paramObject1 : Object ) : boolean
+	{method} +equals ( paramObject1 : Object ) : boolean
+	{method} +hashCode () : int
+	{method} +toString () : String
+}
+
+
+class SubmissionCreateRequest {
+	{field} +formVersion : String
+	{method} #canEqual ( paramObject1 : Object ) : boolean
+	{method} +equals ( paramObject1 : Object ) : boolean
+	{method} +hashCode () : int
+	{method} +toString () : String
+}
+
+
+class SubmissionMeta {
+	{field} +ip : String
+	{field} +language : String
+	{field} +tabletId : String
+	{field} +userAgent : String
+	{method} #canEqual ( paramObject1 : Object ) : boolean
+	{method} +equals ( paramObject1 : Object ) : boolean
+	{method} +hashCode () : int
+	{method} +toString () : String
+}
+
+
+enum SubmissionStatus {
+	{field} +DONE
+	{field} +NEW
+	{field} +VIEWED
+}
+
+
+class SymptomDetail {
+	{field} +key : String
+	{field} +label : String
+	{field} +notes : String
+	{field} +onset : String
+	{field} +option : String
+	{field} +severity : Integer
+	{method} #canEqual ( paramObject1 : Object ) : boolean
+	{method} +equals ( paramObject1 : Object ) : boolean
+	{method} +hashCode () : int
+	{method} +toString () : String
+}
+
+
+class UpdateStatusRequest {
+	{method} #canEqual ( paramObject1 : Object ) : boolean
+	{method} +equals ( paramObject1 : Object ) : boolean
+	{method} +hashCode () : int
+	{method} +toString () : String
+}
+
+
+
+
+AdminSubmissionUpdateRequest -->  Consents : consents
+AdminSubmissionUpdateRequest -->  MedicalData : medical
+AdminSubmissionUpdateRequest -->  PatientData : patientData
+JwtAuthenticationFilter *--  AdminUserDetailsService : userDetailsService
+JwtAuthenticationFilter *--  JwtService : jwtService
+MedicalData "1" o-- "0..*"  SymptomDetail : symptoms
+PatientData -->  Address : address
+SecurityConfig *--  AdminUserDetailsService : adminUserDetailsService
+SecurityConfig *--  JwtService : jwtService
+SecurityConfig *--  SseQueryTokenAuthFilter : sseQueryTokenAuthFilter
+Signature "1" o-- "0..*"  SignatureStroke : strokes
+SignatureStroke "1" o-- "0..*"  SignaturePoint : points
+SseQueryTokenAuthFilter *--  JwtService : jwtService
+Submission "1" o-- "0..*"  SubmissionAttachment : attachments
+Submission -->  Consents : consents
+Submission -->  MedicalData : medical
+Submission -->  PatientData : patientData
+Submission -->  Signature : signature
+Submission -->  SubmissionMeta : meta
+Submission -->  SubmissionStatus : status
+SubmissionCreateRequest -->  Consents : consents
+SubmissionCreateRequest -->  MedicalData : medical
+SubmissionCreateRequest -->  PatientData : patientData
+SubmissionCreateRequest -->  Signature : signature
+SubmissionCreateRequest -->  SubmissionMeta : meta
+UpdateStatusRequest -->  SubmissionStatus : status
+
+
+@enduml

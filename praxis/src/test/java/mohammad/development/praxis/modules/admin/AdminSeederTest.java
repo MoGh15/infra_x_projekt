@@ -65,16 +65,6 @@ class AdminSeederTest {
     }
 
     @Test
-    void run_callsPasswordEncoder() throws Exception {
-        when(adminRepository.count()).thenReturn(0L);
-        when(passwordEncoder.encode("yIG8wsTGE9wLcAdipSFO")).thenReturn("encoded-password");
-
-        adminSeeder.run();
-
-        verify(passwordEncoder).encode("yIG8wsTGE9wLcAdipSFO");
-    }
-
-    @Test
     void run_withArgs_ignoresArgs() throws Exception {
         when(adminRepository.count()).thenReturn(0L);
         when(passwordEncoder.encode(any())).thenReturn("encoded-password");

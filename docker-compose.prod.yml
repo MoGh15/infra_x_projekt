@@ -1,0 +1,56 @@
+# Production docker-compose.yml für Server (dev.praxis-form.de)
+# Lege diese Datei unter /opt/praxis-form/docker-compose.yml auf dem Server ab
+#
+# Ersetze <DEIN-GITLAB-PROJEKT-PFAD> mit deinem GitLab Projekt-Pfad
+# z.B.: registry.gitlab.com/username/praxisform
+
+version: "3.9"
+
+services:
+  mongodb:
+    image: mongo:7.0.28
+    container_name: praxis-mongodb
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:27017:27017"  # Nur lokal erreichbar
+    environment:
+      MONGO_INITDB_DATABASE: praxis
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "mongodb://localhost:27017/praxis", "--eval", "db.runCommand({ ping: 1 }).ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    # GitLab Container Registry Image
+    image: ${CI_REGISTRY_IMAGE:-registry.gitlab.com/DEIN-GITLAB-PROJEKT-PFAD}/backend:latest
+    container_name: praxis-backend
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:8080"  # Nur lokal, nginx leitet weiter
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017/praxis
+      JWT_SECRET: ${JWT_SECRET:-CHANGE_ME_very_long_secret_at_least_32_chars}
+      JWT_EXP_MINUTES: ${JWT_EXP_MINUTES:-120}
+      ADMIN_DEFAULT_PASSWORD: ${ADMIN_DEFAULT_PASSWORD:-CHANGE_ME}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+
+  frontend:
+    # GitLab Container Registry Image
+    image: ${CI_REGISTRY_IMAGE:-registry.gitlab.com/DEIN-GITLAB-PROJEKT-PFAD}/frontend:latest
+    container_name: praxis-frontend
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:4200:80"  # Nur lokal, nginx leitet weiter
+    environment:
+      API_URL: "https://dev.praxis-form.de"
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:
+

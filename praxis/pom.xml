@@ -96,6 +96,35 @@
 
 	<build>
 		<plugins>
+			<!-- PlantUML-Generator Plugin für UML-Klassendiagramme -->
+			<plugin>
+				<groupId>de.elnarion.maven</groupId>
+				<artifactId>plantuml-generator-maven-plugin</artifactId>
+				<version>2.4.0</version>
+				<!-- Global configuration für CLI-Aufruf -->
+				<configuration>
+					<outputDirectory>${project.build.directory}/generated-diagrams</outputDirectory>
+					<outputFilename>class-diagram.puml</outputFilename>
+					<scanPackages>
+						<scanPackage>mohammad.development.praxis.modules.patient</scanPackage>
+						<scanPackage>mohammad.development.praxis.modules.admin</scanPackage>
+						<scanPackage>mohammad.development.praxis.DTOs</scanPackage>
+					</scanPackages>
+					<hideFields>false</hideFields>
+					<hideMethods>false</hideMethods>
+					<useShortClassNames>true</useShortClassNames>
+					<removeFields>false</removeFields>
+				</configuration>
+				<executions>
+					<execution>
+						<id>generate-plantuml-classes</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<phase>generate-sources</phase>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
