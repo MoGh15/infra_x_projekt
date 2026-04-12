@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="praxis-frontend/public/favicon.ico" alt="PraxisForm Logo" width="80" />
-</p>
-
 <h1 align="center">PraxisForm</h1>
 
 <p align="center">
@@ -24,7 +20,6 @@
 - [Über das Projekt](#-über-das-projekt)
 - [Features](#-features)
 - [Tech-Stack](#-tech-stack)
-- [Architektur](#-architektur)
 - [Projektstruktur](#-projektstruktur)
 - [Voraussetzungen](#-voraussetzungen)
 - [Installation & Start](#-installation--start)
@@ -32,7 +27,6 @@
 - [API-Übersicht](#-api-übersicht)
 - [Tests](#-tests)
 - [Deployment](#-deployment)
-- [Mitwirken](#-mitwirken)
 
 ---
 
