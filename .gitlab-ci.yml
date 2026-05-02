@@ -189,6 +189,9 @@ deploy:
           echo 'Kein docker compose gefunden!' && exit 1
         fi
         
+        # Alte Container stoppen und entfernen
+        \$DC down --remove-orphans
+        
         # Images pullen
         \$DC pull
         
