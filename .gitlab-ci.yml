@@ -179,18 +179,20 @@ deploy:
           echo 'CI_REGISTRY_IMAGE=$CI_REGISTRY_IMAGE' >> .env
         fi
         
-        # Docker Compose Command ermitteln (V1 oder V2)
-        if command -v docker-compose &> /dev/null; then
+        # Docker Compose Command ermitteln (V2 bevorzugt, V1 ist inkompatibel mit neueren Images)
+        if docker compose version &> /dev/null; then
+          DC='docker compose'
+        elif command -v docker-compose &> /dev/null; then
           DC='docker-compose'
         else
-          DC='docker compose'
+          echo 'Kein docker compose gefunden!' && exit 1
         fi
         
         # Images pullen
         \$DC pull
         
         # Container neu starten
-        \$DC up -d
+        \$DC up -d --force-recreate --remove-orphans
         
         # Alte Images aufräumen
         docker image prune -f
