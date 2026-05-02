@@ -167,6 +167,7 @@ deploy:
   script:
     - |
       sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST "
+        set -e
         cd $DEPLOY_PATH
         
         # Docker Registry Login
