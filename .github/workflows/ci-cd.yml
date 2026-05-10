@@ -10,9 +10,6 @@ on:
   pull_request:
     branches: [main]
 
-env:
-  BACKEND_IMAGE: ghcr.io/${{ github.repository }}/backend
-  FRONTEND_IMAGE: ghcr.io/${{ github.repository }}/frontend
 
 jobs:
   # ============================================
@@ -135,6 +132,8 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v4
+      - name: Set lowercase repo name
+        run: echo "REPO_LC=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
       - name: Log in to GHCR
         uses: docker/login-action@v3
         with:
@@ -147,8 +146,8 @@ jobs:
           context: ./praxis
           push: true
           tags: |
-            ${{ env.BACKEND_IMAGE }}:${{ github.sha }}
-            ${{ env.BACKEND_IMAGE }}:latest
+            ghcr.io/${{ env.REPO_LC }}/backend:${{ github.sha }}
+            ghcr.io/${{ env.REPO_LC }}/backend:latest
 
   docker-frontend:
     runs-on: ubuntu-latest
@@ -159,6 +158,8 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v4
+      - name: Set lowercase repo name
+        run: echo "REPO_LC=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
       - name: Log in to GHCR
         uses: docker/login-action@v3
         with:
@@ -171,8 +172,8 @@ jobs:
           context: ./praxis-frontend
           push: true
           tags: |
-            ${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
-            ${{ env.FRONTEND_IMAGE }}:latest
+            ghcr.io/${{ env.REPO_LC }}/frontend:${{ github.sha }}
+            ghcr.io/${{ env.REPO_LC }}/frontend:latest
 
   # ============================================
   # DEPLOY JOB
@@ -186,6 +187,8 @@ jobs:
       name: production
       url: https://dev.praxis-form.de
     steps:
+      - name: Set lowercase repo name
+        run: echo "REPO_LC=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
       - name: Deploy to server
         uses: appleboy/ssh-action@v1
         with:
@@ -201,9 +204,9 @@ jobs:
 
             # GHCR Image-Pfade in .env aktualisieren
             if grep -q 'CI_REGISTRY_IMAGE' .env 2>/dev/null; then
-              sed -i 's|CI_REGISTRY_IMAGE=.*|CI_REGISTRY_IMAGE=${{ github.repository }}|' .env
+              sed -i 's|CI_REGISTRY_IMAGE=.*|CI_REGISTRY_IMAGE=${{ env.REPO_LC }}|' .env
             else
-              echo 'CI_REGISTRY_IMAGE=${{ github.repository }}' >> .env
+              echo 'CI_REGISTRY_IMAGE=${{ env.REPO_LC }}' >> .env
             fi
 
             # Docker Compose Command ermitteln
