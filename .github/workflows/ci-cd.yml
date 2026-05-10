@@ -178,7 +178,6 @@ jobs:
   # ============================================
   # DEPLOY JOB (manuell)
   # ============================================
-  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
   deploy:
     runs-on: ubuntu-latest
     needs: [docker-backend, docker-frontend]
