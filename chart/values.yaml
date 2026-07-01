@@ -96,4 +96,19 @@ certManager:
   # Staging: https://acme-staging-v02.api.letsencrypt.org/directory
   acmeServer: https://acme-staging-v02.api.letsencrypt.org/directory
 
-
+grafana:
+    enabled: true
+    adminUser: admin
+    adminPassword: CHANGE_ME_very_long_password_at_least_32_chars
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      annotations:
+        nginx.ingress.kubernetes.io/ssl-redirect: "false"
+        nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+      hosts:
+        - grafana-mohammad.praxis-form.de
+      tls:
+        - secretName: praxis-form-grafana-mohammad-tls
+          hosts:
+            - grafana-mohammad.praxis-form.de

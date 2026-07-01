@@ -1,0 +1,19 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: praxis-form-grafana-mohammad-tls
+  namespace: praxis
+  labels:
+    app.kubernetes.io/instance: praxis-form
+    app.kubernetes.io/managed-by: Helm
+spec:
+  secretName: praxis-form-grafana-mohammad-tls
+  dnsNames:
+    - grafana-mohammad.praxis-form.de
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: praxis-form-letsencrypt-prod
+  usages:
+    - digital signature
+    - key encipherment
