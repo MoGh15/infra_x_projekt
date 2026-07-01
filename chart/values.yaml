@@ -81,6 +81,8 @@ frontend:
 
 # --- MongoDB (Bitnami subchart) ---
 mongodb:
+  image:
+    tag: latest
   enabled: true
   auth:
     enabled: false
