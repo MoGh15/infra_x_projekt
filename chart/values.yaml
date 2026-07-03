@@ -6,6 +6,8 @@ global:
 ingress:
   enabled: true
 
+praxisHost: kubernetes.praxis-form.de
+
 # --- Backend ---
 backend:
   replicaCount: 1

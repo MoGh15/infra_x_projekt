@@ -9,7 +9,7 @@ metadata:
 spec:
   secretName: praxis-form-tls
   dnsNames:
-    - kubernetes.praxis-form.de
+    - {{ .Values.praxisHost }}
   issuerRef:
     group: cert-manager.io
     kind: ClusterIssuer
