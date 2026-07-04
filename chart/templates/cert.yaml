@@ -9,7 +9,7 @@ metadata:
 spec:
   secretName: praxis-form-tls
   dnsNames:
-    - {{ .Values.praxisHost }}
+    - {{ .Values.global.domain }}
   issuerRef:
     group: cert-manager.io
     kind: ClusterIssuer

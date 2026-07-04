@@ -9,7 +9,7 @@ metadata:
 spec:
   secretName: praxis-form-grafana-mohammad-tls
   dnsNames:
-    - {{ (index .Values.grafana.ingress.hosts 0) }}
+    - {{ index .Values.grafana.ingress.hosts 0 }}
   issuerRef:
     group: cert-manager.io
     kind: ClusterIssuer
