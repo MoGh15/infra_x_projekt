@@ -232,5 +232,6 @@ jobs:
           helm upgrade --install praxis-form . \
             --create-namespace -n "${NAMESPACE}" \
             --set global.domain="${DOMAIN}" \
-            --set grafana.ingress.hosts[0]="${GRAFANA_HOST}"
+            --set grafana.ingress.hosts[0]="${GRAFANA_HOST}" \
+            --set grafana.ingress.tls[0].hosts[0]="${GRAFANA_HOST}"
 
