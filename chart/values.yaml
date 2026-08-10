@@ -1,16 +1,16 @@
 # Default values for praxis-form
 
 global:
-  domain: kubernetes.praxis-form.de
+  domain: kubernetes2.praxis-form.de
 
 ingress:
   enabled: true
 
-praxisHost: kubernetes.praxis-form.de
+praxisHost: kubernetes2.praxis-form.de
 
 # --- Backend ---
 backend:
-  replicaCount: 3
+  replicaCount: 2
   image:
     repository: ghcr.io/mogh15/infra_x_projekt/backend
     tag: latest
@@ -38,14 +38,14 @@ backend:
       cert-manager.io/cluster-issuer: praxis-form-letsencrypt
       nginx.ingress.kubernetes.io/rewrite-target: /
     hosts:
-      - host: kubernetes.praxis-form.de
+      - host: kubernetes2.praxis-form.de
         paths:
           - path: /api
             pathType: Prefix
     tls:
       - secretName: praxis-form-backend-tls
         hosts:
-          - kubernetes.praxis-form.de
+          - kubernetes2.praxis-form.de
 
 # --- Frontend ---
 frontend:
@@ -58,7 +58,7 @@ frontend:
     type: ClusterIP
     port: 80
   env:
-    API_URL: https://kubernetes.praxis-form.de
+    API_URL: https://kubernetes2.praxis-form.de
   resources:
     requests:
       cpu: 100m
@@ -111,8 +111,8 @@ grafana:
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
       nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
     hosts:
-      - grafana-mohammad.praxis-form.de
+      - grafana-mohammad2.praxis-form.de
     tls:
       - secretName: praxis-form-grafana-mohammad-tls
         hosts:
-          - grafana-mohammad.praxis-form.de
+          - grafana-mohammad2.praxis-form.de
