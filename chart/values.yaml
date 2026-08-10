@@ -12,7 +12,7 @@ praxisHost: kubernetes2.praxis-form.de
 backend:
   replicaCount: 3
   image:
-    repository: ghcr.io/mogh15/infra_x_projekttest/backend
+    repository: ghcr.io/mogh15/infra_x_projekt/backend
     tag: latest
     pullPolicy: Always
   service:
