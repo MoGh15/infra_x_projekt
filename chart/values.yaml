@@ -72,14 +72,14 @@ frontend:
     annotations:
       cert-manager.io/cluster-issuer: praxis-form-letsencrypt
     hosts:
-      - host: kubernetes.praxis-form.de
+      - host: kubernetes2.praxis-form.de
         paths:
           - path: /
             pathType: Prefix
     tls:
       - secretName: praxis-form-frontend-tls
         hosts:
-          - kubernetes.praxis-form.de
+          - kubernetes2.praxis-form.de
 
 # --- MongoDB (Bitnami subchart) ---
 mongodb:
