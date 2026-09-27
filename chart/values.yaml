@@ -97,7 +97,7 @@ grafana:
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
       nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
     hosts:
-      - grafan.infra-x.cloud
+      - grafana.infra-x.cloud
     tls:
       - secretName: praxis-form-grafana-tls
         hosts:
