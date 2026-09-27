@@ -9,6 +9,7 @@ app:
 spring:
   mongodb:
     uri: ${MONGODB_URI:mongodb://localhost:27017/praxis}
+    auto-index-creation: true
   servlet:
     multipart:
       max-file-size: 10MB

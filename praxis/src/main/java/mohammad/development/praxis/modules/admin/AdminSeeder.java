@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import mohammad.development.praxis.repos.AdminRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +22,7 @@ public class AdminSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if (adminRepository.count() > 0) return;
+        if (adminRepository.existsByUsername("admin")) return;
 
         Admin admin = new Admin();
         admin.setUsername("admin");
@@ -29,7 +30,11 @@ public class AdminSeeder implements CommandLineRunner {
         admin.setRoles(Set.of("ADMIN"));
         admin.setEnabled(true);
 
-        adminRepository.save(admin);
-        System.out.println("✅ Seeded initial admin user: admin / admin");
+        try {
+            adminRepository.insert(admin);
+            System.out.println("Seeded initial admin user: admin");
+        } catch (DuplicateKeyException ignored) {
+            // Another replica inserted the admin after our existence check.
+        }
     }
 }

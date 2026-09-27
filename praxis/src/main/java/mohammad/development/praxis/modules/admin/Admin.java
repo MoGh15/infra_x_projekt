@@ -22,7 +22,7 @@ public class Admin {
     @Id
     private String id;
 
-    @Indexed(unique = true)
+    @Indexed(name = "username_unique", unique = true)
     private String username;
 
     /** bcrypt hash */
