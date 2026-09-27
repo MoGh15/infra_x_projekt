@@ -3,7 +3,7 @@ set -euo pipefail
 
 NAMESPACE="argocd"
 RELEASE_NAME="argocd"
-DOMAIN="argocd2.praxis-form.de"
+DOMAIN="argocd.infra-x.cloud"
 CLUSTER_ISSUER="praxis-form-letsencrypt-prod"
 
 echo "=== ArgoCD Installation via Helm ==="

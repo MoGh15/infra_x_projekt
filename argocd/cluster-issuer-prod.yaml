@@ -1,0 +1,22 @@
+# Source: praxis-form/templates/cluster-issuer-prod.yaml
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: praxis-form-letsencrypt-prod
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: praxis-form
+    helm.sh/chart: praxis-form-0.1.0
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "1"
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: mohammadghannam892@gmail.com
+    privateKeySecretRef:
+      name: praxis-form-letsencrypt-prod-account-key
+    solvers:
+      - http01:
+          ingress:
+            ingressClassName: nginx

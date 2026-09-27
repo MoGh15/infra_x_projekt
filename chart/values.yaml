@@ -1,12 +1,12 @@
 # Default values for praxis-form
 
 global:
-  domain: kubernetes2.praxis-form.de
+  domain: kubernetes.infra-x.cloud
 
 ingress:
   enabled: true
 
-praxisHost: kubernetes2.praxis-form.de
+praxisHost: kubernetes.infra-x.cloud
 
 # --- Backend ---
 backend:
@@ -38,14 +38,14 @@ backend:
       cert-manager.io/cluster-issuer: praxis-form-letsencrypt
       nginx.ingress.kubernetes.io/rewrite-target: /
     hosts:
-      - host: kubernetes2.praxis-form.de
+      - host: kubernetes.infra-x.cloud
         paths:
           - path: /api
             pathType: Prefix
     tls:
       - secretName: praxis-form-backend-tls
         hosts:
-          - kubernetes2.praxis-form.de
+          - kubernetes.infra-x.cloud
 
 # --- Frontend ---
 frontend:
@@ -58,7 +58,7 @@ frontend:
     type: ClusterIP
     port: 80
   env:
-    API_URL: https://kubernetes2.praxis-form.de
+    API_URL: https://kubernetes.infra-x.cloud
   resources:
     requests:
       cpu: 100m
@@ -66,20 +66,6 @@ frontend:
     limits:
       cpu: 500m
       memory: 256Mi
-  ingress:
-    enabled: true
-    className: nginx
-    annotations:
-      cert-manager.io/cluster-issuer: praxis-form-letsencrypt
-    hosts:
-      - host: kubernetes2.praxis-form.de
-        paths:
-          - path: /
-            pathType: Prefix
-    tls:
-      - secretName: praxis-form-frontend-tls
-        hosts:
-          - kubernetes2.praxis-form.de
 
 # --- MongoDB (Bitnami subchart) ---
 mongodb:
@@ -111,8 +97,8 @@ grafana:
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
       nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
     hosts:
-      - grafana-mohammad2.praxis-form.de
+      - grafan.infra-x.cloud
     tls:
-      - secretName: praxis-form-grafana-mohammad-tls
+      - secretName: praxis-form-grafana-tls
         hosts:
-          - grafana-mohammad2.praxis-form.de
+          - grafana.infra-x.cloud
