@@ -7,7 +7,7 @@ const API_BASE = environment.apiUrl
 export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
   const token = inject(TokenStorageService).token;
 
-  const isBackendCall = req.url.startsWith(API_BASE) || req.url.startsWith('/api/');
+  const isBackendCall = (!!API_BASE && req.url.startsWith(API_BASE)) || req.url.startsWith('/api/');
   if (!isBackendCall) {
     return next(req);
   }

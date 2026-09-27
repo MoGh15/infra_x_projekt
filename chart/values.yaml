@@ -17,7 +17,7 @@ backend:
     pullPolicy: Always
   service:
     type: ClusterIP
-    port: 8080
+    port: 80
   env:
     MONGODB_URI: mongodb://praxis-form-mongodb:27017/praxis
     JWT_EXP_MINUTES: "120"
@@ -58,7 +58,9 @@ frontend:
     type: ClusterIP
     port: 80
   env:
-    API_URL: https://kubernetes.infra-x.cloud
+    # leer = Browser ruft /api auf dem gleichen Host auf, nginx im Frontend-Pod
+    # leitet intern an den Backend-Service ({{ .Release.Name }}-backend) weiter
+    API_URL: ""
   resources:
     requests:
       cpu: 100m

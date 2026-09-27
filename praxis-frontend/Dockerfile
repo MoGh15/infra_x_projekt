@@ -12,7 +12,7 @@ WORKDIR /usr/share/nginx/html
 
 # Angular build output (achte auf deinen dist-Namen!)
 COPY --from=build /app/dist/praxis-frontend/browser /usr/share/nginx/html/
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/templates/default.conf.template
 
 # env template
 COPY src/assets/env.template.js /usr/share/nginx/html/assets/env.template.js

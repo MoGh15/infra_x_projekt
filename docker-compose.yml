@@ -40,7 +40,8 @@ services:
     ports:
       - "4200:80"
     environment:
-      API_URL: "http://localhost:8080"
+      API_URL: ""
+      BACKEND_URL: "http://backend:8080"
     depends_on:
       - backend
 
